@@ -28,20 +28,28 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    const supabase = createBrowserSupabaseClient();
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const supabase = createBrowserSupabaseClient();
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (error) {
-      setError(error.message);
+      if (error) {
+        setError(error.message);
+        return;
+      }
+
+      router.replace("/dashboard");
+    } catch (err) {
+      if (err instanceof Error && err.message.includes("Supabase non configuré")) {
+        setError("Le service d'authentification n'est pas configuré. Contactez l'administrateur.");
+      } else {
+        setError("Impossible de contacter le serveur. Vérifiez votre connexion internet et réessayez.");
+      }
+    } finally {
       setLoading(false);
-      return;
     }
-
-    router.push("/");
-    router.refresh();
   }
 
   return (

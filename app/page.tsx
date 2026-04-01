@@ -1,4 +1,9 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { createBrowserSupabaseClient } from "@/lib/supabase";
 import { Navbar } from "@/components/Navbar";
 import { PricingCards } from "@/components/PricingCards";
 import { Button } from "@/components/ui/button";
@@ -6,6 +11,30 @@ import { Badge } from "@/components/ui/badge";
 import { Sparkles, Zap, BarChart3, Globe } from "lucide-react";
 
 export default function LandingPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const supabase = createBrowserSupabaseClient();
+    async function checkAuth() {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        router.replace("/dashboard");
+      } else {
+        setLoading(false);
+      }
+    }
+    checkAuth();
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />

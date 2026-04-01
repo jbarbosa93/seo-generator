@@ -7,7 +7,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const navItems = [
-    { href: "/", icon: LayoutDashboard, label: "Dashboard" },
+    { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { href: "/generate", icon: Wand2, label: "Générer" },
     { href: "/history", icon: History, label: "Historique" },
     { href: "/settings", icon: Settings, label: "Paramètres" },
